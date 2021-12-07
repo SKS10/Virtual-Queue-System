@@ -1,16 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {View,Text, Pressable,TextInput} from 'react-native';
 import styles from './styles';
+import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
 
+
 const GuestsScreen = (props) => {
+   
+    
     const [adults,setAdults]=useState(0);
     const [children,setChildren]=useState(0);
+    
   
 
     const navigation =useNavigation();
-    
-    
+    const Writedata = async () => {
+        firestore()
+        .collection('queue')
+        .add({
+          ADULTS:adults,
+          CHILDREN: children,
+          
+      
+        })
+        .then(()=> {
+          console.log('Details added');
+        })
+        .catch(()=> {
+          console.log('Details wrong')
+        })
+      }
+     
     
     return(
         <View style={{justifyContent: 'space-between',height: '100%'}}>
@@ -67,8 +87,14 @@ const GuestsScreen = (props) => {
             
             </View>
             <View>
+            
+                  
 
-                
+
+            <Pressable onPress={Writedata} style={{marginBottom: 20,backgroundColor: 'lightgrey',alignItems: 'center',height: 50,
+                marginHorizontal: 20,borderRadius: 10}} >
+                    <Text style={{fontSize: 20, color: 'black',fontWeight:'bold'}}>ADD</Text>
+                </Pressable>
             <Pressable onPress={()=> navigation.navigate('Feed',{itemId:adults,otherParam:children})} style={{marginBottom: 20,backgroundColor: 'lightgrey',alignItems: 'center',height: 50,
                 marginHorizontal: 20,borderRadius: 10}} >
                     <Text style={{fontSize: 20, color: 'black',fontWeight:'bold'}}>CONFIRM</Text>
